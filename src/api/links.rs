@@ -68,6 +68,20 @@ async fn get_from_link(path: Path<String>, data: web::Data<Pool<MySql>>) -> impl
         .finish()
 }
 
+#[get("/s/{code}")]
+async fn get_origin_url_from_link(path: Path<String>, data: web::Data<Pool<MySql>>) -> impl Responder {
+    let code = path.into_inner();
+    let url = get_original_url(data.as_ref().clone(), code).await;
+    let url = match url {
+        Ok(x) => x,
+        Err(e) => {
+            print!("{}", e);
+            return  Json(ApiResult::error("404"))
+        }
+    };
+    Json(ApiResult::success(Some(url)))
+}
+
 async fn get_original_url(pool: Pool<MySql>, code: String) -> Result<String, sqlx::Error> {
     let row: (String,) = sqlx::query_as("SELECT origin_url from tiny_link where tiny_code = ?")
         .bind(code)

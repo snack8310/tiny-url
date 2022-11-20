@@ -63,6 +63,7 @@ async fn main() -> Result<(), sqlx::Error> {
             .service(api::links::create_link)
             .service(api::links::get_all_links)
             .service(api::links::get_from_link)
+            .service(api::links::get_origin_url_from_link)
     })
     // .bind(("127.0.0.1", 8080))?
     .bind(&ip)?
