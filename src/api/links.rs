@@ -90,7 +90,7 @@ async fn get_original_url(pool: Pool<MySql>, code: String) -> Result<String, sql
     Ok(row.0)
 }
 
-#[get("/links")]
+#[get("/links/all")]
 async fn get_all_links(data: web::Data<Pool<MySql>>) -> impl Responder {
     let links = get_links(data.as_ref().clone()).await;
     let links = match links {
